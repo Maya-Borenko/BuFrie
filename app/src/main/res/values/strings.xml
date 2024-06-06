@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BuFrie</string>
+    <string name="infoProg">О программе</string>
+    <string name="infoAuthor">Об авторе</string>
+    <string name="help">Инструкция</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.BuFrie" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
+    <!-- Стиль для меню переполнения -->
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">#FF9939</item>
+    </style>
+
+    <!-- Стиль для элементов меню переполнения -->
+    <style name="PopupMenuItemStyle" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textColor">#673100</item>
+    </style>
+    <style name="Theme.BuFrie" parent="Base.Theme.BuFrie" />
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">#FFF4DC</item>
+        <item name="android:textColor">#673100</item>
+    </style>
+</resources>

@@ -46,6 +46,14 @@
         android:textColor="#673100"
         android:layout_gravity="center"/>
     <Button
+        android:id="@+id/editProf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Редактировать профиль"
+        android:backgroundTint="#FFB923"
+        android:textColor="#673100"
+        android:layout_gravity="center"/>
+    <Button
         android:id="@+id/newAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

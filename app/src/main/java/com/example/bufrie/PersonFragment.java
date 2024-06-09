@@ -49,11 +49,7 @@ public class PersonFragment extends Fragment {
     private static final String CHANNEL_ID = "my_channel_id";
     ArrayList<Add> adds = new ArrayList<Add>();
     FragmentPersonBinding binding;
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int REQUEST_IMAGE_PICK = 2;
-    private static final int REQUEST_CAMERA_PERMISSION = 100;
-    private static final int REQUEST_CODE = 1;
+
 
     PersonFragment(User currentUser){
         this.user = currentUser;
@@ -80,6 +76,14 @@ public class PersonFragment extends Fragment {
                 editor.putBoolean("isLoggedIn", false);
                 editor.apply();
                 startActivity(exit);
+                getActivity().finish();
+            }
+        });
+        Intent editProf = new Intent(getActivity(), EditActivity.class);
+        binding.editProf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(editProf);
                 getActivity().finish();
             }
         });
@@ -120,12 +124,7 @@ public class PersonFragment extends Fragment {
                 startActivity(newAd);
             }
         });
-        binding.ava.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showImageSourceDialog();
-            }
-        });
+
         createNotificationChannel();
         return binding.getRoot();
     }
@@ -154,84 +153,6 @@ public class PersonFragment extends Fragment {
             notificationManager.createNotificationChannel(channel);
         }
     }
-    private void showImageSourceDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Выберите источник изображения");
-        builder.setItems(new CharSequence[]{"Сделать фото", "Выбрать из галереи"}, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == 0) {
-                    // Открыть камеру
-                    if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        // Запрос разрешения, если оно не было предоставлено
-                        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-                    } else {
-                        // Разрешение уже предоставлено, можно открывать камеру
-                        openCamera();
-                    }
-                } else {
-                    // Открыть галерею
-                    openGallery();
-                }
-            }
-        });
-        builder.create().show();
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Разрешение предоставлено, можно открывать камеру
-                openCamera();
-            } else {
-                // Разрешение не предоставлено, показать сообщение пользователю
-                // ...
-            }
-        }
-    }
-
-
-    private void openCamera() {
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
-    private void openGallery() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, REQUEST_IMAGE_PICK);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == getActivity().RESULT_OK) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                // Получаем сделанное фото из камеры
-                Bundle extras = data.getExtras();
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                binding.ava.setImageBitmap(imageBitmap);
-            } else if (requestCode == REQUEST_IMAGE_PICK) {
-                // Получаем выбранное изображение из галереи
-                Uri selectedImageUri = data.getData();
-                binding.ava.setImageURI(selectedImageUri);
-            }
-            Bitmap bitmap = ((BitmapDrawable) binding.ava.getDrawable()).getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, true);
-            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-            byte[] imageInByte = baos.toByteArray();
-            SQLiteDatabase database = new SQLiteHelper(getActivity()).getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put(SQLiteTable.User.COLUMN_IMAGE, imageInByte);
-            database.update(SQLiteTable.User.TABLE_NAME, values, SQLiteTable.User.COLUMN_ID + "=" + Integer.parseInt(String.valueOf(user.id)), null);
-        }
-    }
-
-
 
     private void fillData() {
         String[] projection = {

@@ -14,8 +14,8 @@
         android:id="@+id/ava"
         android:layout_margin="30dp"
         android:layout_height="90dp"
-        android:layout_width="90dp"
-        android:background="#F6E4BC"/>
+        android:layout_width="90dp" />
+<!--        android:background="#F6E4BC"/>-->
         <LinearLayout
             android:layout_gravity="center"
             android:layout_width="wrap_content"

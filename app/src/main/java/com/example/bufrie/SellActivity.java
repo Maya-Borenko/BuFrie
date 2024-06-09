@@ -24,6 +24,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.bufrie.databinding.ActivitySellBinding;
 
@@ -108,10 +109,11 @@ public class SellActivity extends AppCompatActivity {
                 database.execSQL("DELETE FROM "+SQLiteTable.Favourites.TABLE_NAME + " WHERE " + SQLiteTable.Favourites.COLUMN_AD +" = "+ itemId +" and "+ SQLiteTable.Favourites.COLUMN_USER + " = " + me.id);
             }
         });
-
+        Toast editMes = Toast.makeText(this, "Вы в режиме редактирования", Toast.LENGTH_SHORT);
         binding.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                editMes.show();
                 binding.saveButton.setVisibility(View.VISIBLE);
                 binding.act.setVisibility(View.VISIBLE);
                 binding.titleAd.setEnabled(true);
@@ -125,6 +127,7 @@ public class SellActivity extends AppCompatActivity {
                 });
             }
         });
+        Toast saved = Toast.makeText(this, "Изменения сохранены!", Toast.LENGTH_SHORT);
         binding.saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,10 +137,12 @@ public class SellActivity extends AppCompatActivity {
                 binding.descrAd.setEnabled(false);
                 binding.priceAd.setEnabled(false);
                 saveToDB();
+                saved.show();
             }
         });
 
     }
+
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_IMAGE_PICK = 2;
     private static final int REQUEST_CAMERA_PERMISSION = 100;

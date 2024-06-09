@@ -1,13 +1,17 @@
 package com.example.bufrie;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +23,7 @@ import java.sql.ResultSet;
 
 public class EnterActivity extends AppCompatActivity {
     String userId;
+    private static final String CHANNEL_ID = "my_channel_id";
     ActivityEnterBinding binding;
     SharedPreferences saveEnter;
     @Override
@@ -63,6 +68,7 @@ public class EnterActivity extends AppCompatActivity {
                     binding.password.setTextColor(Color.rgb(103, 49, 0));
 
                     saveEnter(true);
+                    sendNotification();
                     startActivity(home);
                     finish();
                 }else{
@@ -73,6 +79,34 @@ public class EnterActivity extends AppCompatActivity {
                 }
                     }
                 });
+        createNotificationChannel();
+    }
+
+    private void sendNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.icon)
+                .setContentTitle("Здравствуйте!")
+                .setContentText("Рады снова вас видеть!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0, builder.build());
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "My Channel";
+            String description = "This is my channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
     public void saveEnter(boolean ent){
         SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);

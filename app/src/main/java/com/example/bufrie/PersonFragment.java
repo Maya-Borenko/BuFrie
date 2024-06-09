@@ -3,6 +3,8 @@ package com.example.bufrie;
 import static androidx.core.provider.FontsContractCompat.FontRequestCallback.RESULT_OK;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,11 +17,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -42,6 +46,7 @@ import java.util.ArrayList;
 public class PersonFragment extends Fragment {
     User user;
     MyListAdapter adapter;
+    private static final String CHANNEL_ID = "my_channel_id";
     ArrayList<Add> adds = new ArrayList<Add>();
     FragmentPersonBinding binding;
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -69,6 +74,7 @@ public class PersonFragment extends Fragment {
         binding.exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendNotification();
                 SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isLoggedIn", false);
@@ -120,7 +126,33 @@ public class PersonFragment extends Fragment {
                 showImageSourceDialog();
             }
         });
+        createNotificationChannel();
         return binding.getRoot();
+    }
+    private void sendNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.icon)
+                .setContentTitle("До свидания!")
+                .setContentText("Мы будем скучать(")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0, builder.build());
+    }
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "My Channel";
+            String description = "This is my channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
     private void showImageSourceDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

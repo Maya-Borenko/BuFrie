@@ -99,6 +99,9 @@ public class PersonFragment extends Fragment {
             Bitmap bitmap = BitmapFactory.decodeByteArray(user.image, 0, user.image.length);
             binding.ava.setImageBitmap(bitmap);
         }
+        else{
+            binding.ava.setImageResource(R.drawable.user);
+        }
         fillData();
         adapter = new MyListAdapter(getActivity(), adds);
         ListView list = binding.myAdds;

@@ -85,6 +85,16 @@ public class FavFragment extends Fragment {
         }
         return binding.getRoot();
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (binding.sadSmile.getVisibility() == View.VISIBLE) {
+            ImageView imageView = binding.sadSmile;
+            Animation shakeAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_shake);
+            imageView.startAnimation(shakeAnimation);
+        }
+    }
     private boolean fillData() {
         SQLiteDatabase database = new SQLiteHelper(getActivity()).getReadableDatabase();
         String[] adProjection = {

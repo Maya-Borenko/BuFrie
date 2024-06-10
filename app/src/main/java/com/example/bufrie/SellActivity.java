@@ -192,13 +192,18 @@ public class SellActivity extends AppCompatActivity {
         }
     }
     private void saveToDB() {
+        byte[] imageInByte;
         ImageView imageView = binding.selAni;
-        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 600, 800, true);
-        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-        byte[] imageInByte = baos.toByteArray();
-
+        if (imageView.getDrawable() != null) {
+            Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 600, 800, true);
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+            imageInByte = baos.toByteArray();
+        }
+        else{
+            imageInByte = null;
+        }
         SQLiteDatabase database = new SQLiteHelper(this).getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SQLiteTable.Ads.COLUMN_NAME, binding.titleAd.getText().toString());

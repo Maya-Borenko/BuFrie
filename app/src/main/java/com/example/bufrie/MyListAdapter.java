@@ -3,6 +3,7 @@ package com.example.bufrie;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,7 @@ public class MyListAdapter extends BaseAdapter {
             Bitmap bitmap = BitmapFactory.decodeByteArray(a.image, 0, a.image.length);
             if (((ImageView) view.findViewById(R.id.ani)) != null) {((ImageView) view.findViewById(R.id.ani)).setImageBitmap(bitmap);}
         }
+        else{((ImageView) view.findViewById(R.id.ani)).setImageResource(R.drawable.icon);}
         ((TextView) view.findViewById(R.id.adId)).setText(a.id+"");
         return view;
     }
